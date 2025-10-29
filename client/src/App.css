@@ -1,0 +1,85 @@
+/* Layout wrapper */
+.container {
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Page title */
+h1 {
+  text-align: center;
+  font-size: 26px;
+  margin-bottom: 6px;
+}
+
+/* Small description */
+.subtitle {
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+/* Form Grid */
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+/* 2 columns on desktop */
+@media (min-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  /* Button full width below form */
+  .grid button {
+    grid-column: span 2;
+  }
+}
+
+/* Button spacing */
+button {
+  margin-top: 10px;
+}
+
+/* Error message */
+.error {
+  margin-top: 20px;
+  padding: 12px;
+  background: #ffe3e3;
+  border-left: 6px solid #e63946;
+  border-radius: 6px;
+  color: #7a1111;
+  font-weight: 600;
+}
+
+/* Result card */
+.card {
+  margin-top: 24px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  border-left: 6px solid #ccc;
+  box-shadow: 0 0 6px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+  margin-top: 0;
+}
+
+/* Disclaimer note */
+.disclaimer {
+  font-size: 12px;
+  color: #555;
+  margin-top: 12px;
+  opacity: 0.9;
+}
+
+/* Tiny footer note */
+footer.tiny {
+  margin-top: 22px;
+  font-size: 12px;
+  text-align: center;
+  opacity: 0.65;
+}

@@ -1,0 +1,93 @@
+/* Global reset & font */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Roboto, sans-serif;
+  background: #f6f7f9;
+  color: #222;
+}
+
+/* Center layout */
+.container {
+  max-width: 480px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* Form elements */
+input, select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: 2px solid #ccc;
+  transition: 0.2s;
+  font-size: 16px;
+}
+
+input:focus, select:focus {
+  border-color: #0a84ff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(10,132,255,0.3);
+}
+
+label {
+  font-weight: 600;
+  margin-top: 12px;
+  display: block;
+}
+
+/* Button */
+button {
+  width: 100%;
+  background: #0a84ff;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+button:hover {
+  background: #006cd8;
+}
+
+/* Result card */
+.result-card {
+  margin-top: 24px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  border-left: 6px solid #ccc;
+}
+
+/* Risk border colors */
+.risk-low { border-left-color: #2ecc71 !important; }
+.risk-moderate { border-left-color: #f1c40f !important; }
+.risk-high { border-left-color: #e67e22 !important; }
+.risk-very_high { border-left-color: #e74c3c !important; }
+
+/* Risk gauge container */
+.risk-gauge {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: conic-gradient(#0a84ff 0deg, #e0e0e0 0deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px auto;
+  font-size: 24px;
+  font-weight: bold;
+  color: #222;
+  transition: background 1s ease-in-out;
+}
+
+/* Accessibility – stronger outline for keyboard users */
+:focus-visible {
+  outline: 3px dashed #0a84ff !important;
+  outline-offset: 3px;
+}
