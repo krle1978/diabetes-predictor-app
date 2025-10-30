@@ -96,26 +96,46 @@ If inputs are inconsistent, reduce confidence and reflect uncertainty in risk_pe
     };
 
     // Responses API + Structured Outputs
-    const response = await openai.responses.create({
-    model: "gpt-4.1-mini",
-    input: [
-        { role: "system", content: systemPrompt },
-        {
-        role: "user",
-        content: "Calculate diabetes risk and return structured JSON using the provided schema.",
-        },
-        {
-        role: "user",
-        content: `INPUT: ${JSON.stringify(userPayload)}`,
-        },
-    ],
-        text: {
-            format: {
-            type: "json_schema",
-            name: "DiabetesRiskResponse",
-            schema, // ✅ najnovija specifikacija
-            },
-        },
+//    const response = await openai.responses.create({
+//    model: "gpt-4.1-mini",
+//    input: [
+//        { role: "system", content: systemPrompt },
+//        {
+//        role: "user",
+//        content: "Calculate diabetes risk and return structured JSON using the provided schema.",
+//        },
+//        {
+//        role: "user",
+//        content: `INPUT: ${JSON.stringify(userPayload)}`,
+//        },
+//    ],
+//        text: {
+//            format: {
+//            type: "json_schema",
+//            name: "DiabetesRiskResponse",
+//            schema, // ✅ najnovija specifikacija
+//            },
+//        },
+//    });
+
+    // MOCK response while OpenAI credits are empty
+    return res.json({
+      input: userPayload,
+      result: {
+        risk_percent: Math.floor(Math.random() * 100),
+        risk_level: "moderate",
+        key_factors: ["MOCKED - no real AI risk calculation yet"],
+        diet_recommendations: [
+          "Eat balanced meals",
+          "Avoid sugary drinks",
+          "Increase vegetables intake"
+        ],
+        activity_plan: [
+          { name: "Walking", frequency_per_week: 3, duration_minutes: 30 },
+          { name: "Cycling", frequency_per_week: 2, duration_minutes: 45 }
+        ],
+        disclaimer: "MOCK MODE: AI disabled due to cost-saving mode 😄"
+      }
     });
 
         // Ekstrakcija JSON rezultata iz Responses API
