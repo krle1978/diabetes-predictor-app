@@ -28,23 +28,26 @@ export default function App() {
     setError("");
     setResult(null);
     try {
-      const res = await fetch("https://diabetes-predictor-app-production.up.railway.app/api/predict", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          age: Number(form.age),
-          weightKg: Number(form.weightKg),
-          heightCm: Number(form.heightCm),
-          bloodPressure: form.bloodPressure,
-          cholesterol: form.cholesterol,
-          gender: form.gender,
-          hba1cPercent: Number(form.hba1cPercent),
-          glucoseMgDl: Number(form.glucoseMgDl),
-        }),
-      });
+      const res = await fetch(
+        "https://diabetes-predictor-app-production.up.railway.app/api/predict",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            age: Number(form.age),
+            weightKg: Number(form.weightKg),
+            heightCm: Number(form.heightCm),
+            bloodPressure: form.bloodPressure,
+            cholesterol: form.cholesterol,
+            gender: form.gender,
+            hba1cPercent: Number(form.hba1cPercent),
+            glucoseMgDl: Number(form.glucoseMgDl),
+          }),
+        }
+      );
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Request failed");
-      setResult(data.result);
+      setResult(data);
     } catch (err) {
       setError(err.message || "Unknown error");
     } finally {
@@ -61,23 +64,23 @@ export default function App() {
 
       <form onSubmit={onSubmit} className="grid">
         <label>Age (years)
-          <input name="age" type="number" min="0" step="1" required value={form.age} onChange={onChange}/>
+          <input name="age" type="number" min="0" step="1" required value={form.age} onChange={onChange} />
         </label>
 
         <label>Weight (kg)
-          <input name="weightKg" type="number" min="1" step="0.1" required value={form.weightKg} onChange={onChange}/>
+          <input name="weightKg" type="number" min="1" step="0.1" required value={form.weightKg} onChange={onChange} />
         </label>
 
         <label>Height (cm)
-          <input name="heightCm" type="number" min="30" step="0.1" required value={form.heightCm} onChange={onChange}/>
+          <input name="heightCm" type="number" min="30" step="0.1" required value={form.heightCm} onChange={onChange} />
         </label>
 
         <label>Blood Pressure
-          <input name="bloodPressure" placeholder="npr. 130/85" value={form.bloodPressure} onChange={onChange}/>
+          <input name="bloodPressure" placeholder="npr. 130/85" value={form.bloodPressure} onChange={onChange} />
         </label>
 
         <label>Cholesterol
-          <input name="cholesterol" placeholder="npr. 5.2 mmol/L ili 200 mg/dL" value={form.cholesterol} onChange={onChange}/>
+          <input name="cholesterol" placeholder="npr. 5.2 mmol/L ili 200 mg/dL" value={form.cholesterol} onChange={onChange} />
         </label>
 
         <label>Gender
@@ -89,11 +92,11 @@ export default function App() {
         </label>
 
         <label>HbA1c level (%)
-          <input name="hba1cPercent" type="number" min="3" max="20" step="0.1" required value={form.hba1cPercent} onChange={onChange}/>
+          <input name="hba1cPercent" type="number" min="3" max="20" step="0.1" required value={form.hba1cPercent} onChange={onChange} />
         </label>
 
         <label>Blood Glucose (mg/dL)
-          <input name="glucoseMgDl" type="number" min="40" max="600" step="1" required value={form.glucoseMgDl} onChange={onChange}/>
+          <input name="glucoseMgDl" type="number" min="40" max="600" step="1" required value={form.glucoseMgDl} onChange={onChange} />
         </label>
 
         <button type="submit" disabled={loading}>
@@ -104,60 +107,48 @@ export default function App() {
       {error && <p className="error">⚠️ {error}</p>}
 
       {result && (
-        <div
-          className={`result-card ${(() => {
-            switch (result.risk_level) {
-              case "low": return "risk-low";
-              case "moderate": return "risk-moderate";
-              case "high": return "risk-high";
-              case "very_high": return "risk-very_high";
-              default: return "";
-            }
-          })()}`}
-          role="alert"
-        >
-          {/* Risk Gauge */}
-          <div
-            className="risk-gauge"
-            style={{
-              background: `conic-gradient(
-                #0a84ff ${result.risk_percent * 3.6}deg,
-                #e0e0e0 0deg
-              )`,
-            }}
-          >
-            {result.risk_percent}%
-          </div>
-
-          <h2 style={{ textTransform: "capitalize" }}>
-            Risk: {result.risk_level.replace("_", " ")}
-          </h2>
-
-          {result.key_factors?.length > 0 && (
-            <>
-              <h3>Key Factors</h3>
-              <ul>
-                {result.key_factors.map((k, i) => <li key={i}>{k}</li>)}
-              </ul>
-            </>
+        <>
+          {result.mode === "mock" && (
+            <p className="badge mock">
+              ⚠️ Mock Mode Active — AI disabled until credits restored
+            </p>
+          )}
+          {result.mode === "ai" && (
+            <p className="badge ai">✅ AI Mode Enabled</p>
           )}
 
-          <h3>Diet recommendations</h3>
-          <ul>
-            {result.diet_recommendations.map((d, i) => <li key={i}>{d}</li>)}
-          </ul>
+          <div className={`result-card risk-${result.result.risk_level}`} role="alert">
+            {/* Risk Gauge */}
+            <div className="risk-gauge">
+              {result.result.risk_percent}%
+            </div>
 
-          <h3>Activity Plan</h3>
-          <ul>
-            {result.activity_plan.map((a, i) => (
-              <li key={i}>
-                {a.name} — {a.frequency_per_week}× weekly, {a.duration_minutes} min
-              </li>
-            ))}
-          </ul>
+            <h2 style={{ textTransform: "capitalize" }}>
+              Risk: {result.result.risk_level.replace("_", " ")}
+            </h2>
 
-          <p className="disclaimer">{result.disclaimer}</p>
-        </div>
+            <h3>Key Factors</h3>
+            <ul>
+              {result.result.key_factors.map((k, i) => <li key={i}>{k}</li>)}
+            </ul>
+
+            <h3>Diet recommendations</h3>
+            <ul>
+              {result.result.diet_recommendations.map((d, i) => <li key={i}>{d}</li>)}
+            </ul>
+
+            <h3>Activity Plan</h3>
+            <ul>
+              {result.result.activity_plan.map((a, i) => (
+                <li key={i}>
+                  {a.name} — {a.frequency_per_week}× weekly, {a.duration_minutes} min
+                </li>
+              ))}
+            </ul>
+
+            <p className="disclaimer">{result.result.disclaimer}</p>
+          </div>
+        </>
       )}
 
       <footer className="tiny">
