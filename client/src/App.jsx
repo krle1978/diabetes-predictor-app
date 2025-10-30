@@ -28,7 +28,7 @@ export default function App() {
     setError("");
     setResult(null);
     try {
-      const res = await fetch("http://localhost:3001/api/predict", {
+      const res = await fetch("https://diabetes-predictor-app-production.up.railway.app/api/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
