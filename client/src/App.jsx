@@ -139,36 +139,64 @@ export default function App() {
         {error && <p className="error">⚠️ {error}</p>}
 
         {result && (
-          <div className={`result-card risk-${result.risk_level}`} role="alert">
-            <div className="risk-gauge">
-              {result.risk_percent}%
+          <>
+            {/* Mode badge */}
+            {result?.mode === "mock" && (
+              <p className="badge mock">⚠️ Mock Mode Active</p>
+            )}
+            {result?.mode === "ai" && (
+              <p className="badge ai">✅ AI Mode Enabled</p>
+            )}
+
+            <div className={`result-card risk-${result.risk_level}`} role="alert">
+
+              {/* Risk Gauge */}
+              <div
+                className="risk-gauge"
+                style={{
+                  background: `conic-gradient(
+                    #0a84ff ${result.risk_percent * 3.6}deg,
+                    #e0e0e0 0deg
+                  )`
+                }}
+              >
+                {result.risk_percent}%
+              </div>
+
+              <h2 style={{ textTransform: "capitalize" }}>
+                Risk: {result.risk_level.replace("_", " ")}
+              </h2>
+
+              {result.key_factors?.length > 0 && (
+                <>
+                  <h3>Key Factors</h3>
+                  <ul>
+                    {result.key_factors.map((k, i) => (
+                      <li key={i}>{k}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+
+              <h3>Diet recommendations</h3>
+              <ul>
+                {result.diet_recommendations.map((d, i) => (
+                  <li key={i}>{d}</li>
+                ))}
+              </ul>
+
+              <h3>Activity Plan</h3>
+              <ul>
+                {result.activity_plan.map((a, i) => (
+                  <li key={i}>
+                    {a.name} — {a.frequency_per_week}× weekly, {a.duration_minutes} min
+                  </li>
+                ))}
+              </ul>
+
+              <p className="disclaimer">{result.disclaimer}</p>
             </div>
-
-            <h2 style={{ textTransform: "capitalize" }}>
-              Risk: {result.risk_level.replace("_", " ")}
-            </h2>
-
-            <h3>Key Factors</h3>
-            <ul>
-              {result.key_factors.map((k, i) => <li key={i}>{k}</li>)}
-            </ul>
-
-            <h3>Diet recommendations</h3>
-            <ul>
-              {result.diet_recommendations.map((d, i) => <li key={i}>{d}</li>)}
-            </ul>
-
-            <h3>Activity Plan</h3>
-            <ul>
-              {result.activity_plan.map((a, i) => (
-                <li key={i}>
-                  {a.name} — {a.frequency_per_week}× weekly, {a.duration_minutes} min
-                </li>
-              ))}
-            </ul>
-
-            <p className="disclaimer">{result.disclaimer}</p>
-          </div>
+          </>
         )}
 
         <footer className="tiny">
