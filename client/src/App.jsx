@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import "./styles/ui.css";
 
-const API_BASE =
-  "https://diabetes-predictor-app-production.up.railway.app";
+const API_BASE = "https://diabetes-predictor-app-production.up.railway.app";
 
 export default function App() {
   const [form, setForm] = useState({
@@ -20,15 +19,14 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
-  const [mockEnabled, setMockEnabled] = useState(true); // ✅ Admin toggle
+  const [mockEnabled, setMockEnabled] = useState(true);
 
-  // ✅ Ctrl+Shift+M toggles MOCK/AI mode
   useEffect(() => {
     const handleKey = (e) => {
       if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "m") {
         setMockEnabled((prev) => !prev);
         alert(
-          `Mock Mode: ${!mockEnabled ? "✅ ON" : "❌ OFF"}\n(Refetch required)`
+          `Mock Mode: ${!mockEnabled ? "✅ ON" : "❌ OFF"}\n(Re-send predicting)`
         );
       }
     };
@@ -46,6 +44,7 @@ export default function App() {
     setLoading(true);
     setError("");
     setResult(null);
+
     try {
       const res = await fetch(`${API_BASE}/api/predict`, {
         method: "POST",
@@ -57,14 +56,14 @@ export default function App() {
           heightCm: Number(form.heightCm),
           hba1cPercent: Number(form.hba1cPercent),
           glucoseMgDl: Number(form.glucoseMgDl),
-          mock: mockEnabled, // ✅ šaljemo informaciju serveru
+          mock: mockEnabled,
         }),
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Request failed");
 
-      setResult(data);
+      setResult(data.result); // ✅ FIX
     } catch (err) {
       setError(err.message || "Unknown error");
     } finally {
@@ -73,115 +72,109 @@ export default function App() {
   };
 
   return (
-    <div className="container">
-      <img
-        src="/src/assets/smarthealth_logo.png"
-        alt="SmartHealth AI logo"
-        className="brand-logo"
-      />
+    <div className="app-wrapper">
+      <div className="container">
 
-      <h1>SmartHealth AI — Diabetes Predictor</h1>
-      <p className="subtitle">
-        Personalized diabetes risk assessment powered by AI
-      </p>
+        <img
+          src="/smarthealth_logo.png"
+          alt="SmartHealth AI"
+          className="brand-logo"
+        />
 
-      {mockEnabled ? (
-        <p className="badge mock">⚠️ MOCK Mode Active</p>
-      ) : (
-        <p className="badge ai">✅ AI Mode (Railway)</p>
-      )}
+        <h1>SmartHealth AI — Diabetes Predictor</h1>
+        <p className="subtitle">
+          Personalized diabetes risk assessment powered by AI
+        </p>
 
-      <form onSubmit={onSubmit} className="grid">
-        <label>Age (years)
-          <input name="age" type="number" min="0" step="1" required
-            value={form.age} onChange={onChange} />
-        </label>
+        {mockEnabled ? (
+          <p className="badge mock">⚠️ MOCK Mode Active</p>
+        ) : (
+          <p className="badge ai">✅ AI Mode Enabled</p>
+        )}
 
-        <label>Weight (kg)
-          <input name="weightKg" type="number" min="1" step="0.1" required
-            value={form.weightKg} onChange={onChange} />
-        </label>
+        <form onSubmit={onSubmit} className="grid">
+          <label>Age (years)
+            <input name="age" type="number" required value={form.age} onChange={onChange} />
+          </label>
 
-        <label>Height (cm)
-          <input name="heightCm" type="number" min="30" step="0.1" required
-            value={form.heightCm} onChange={onChange} />
-        </label>
+          <label>Weight (kg)
+            <input name="weightKg" type="number" required value={form.weightKg} onChange={onChange} />
+          </label>
 
-        <label>Blood Pressure
-          <input name="bloodPressure" placeholder="130/85"
-            value={form.bloodPressure} onChange={onChange} />
-        </label>
+          <label>Height (cm)
+            <input name="heightCm" type="number" required value={form.heightCm} onChange={onChange} />
+          </label>
 
-        <label>Cholesterol
-          <input name="cholesterol" placeholder="5.2 mmol/L or 200 mg/dL"
-            value={form.cholesterol} onChange={onChange} />
-        </label>
+          <label>Blood Pressure
+            <input name="bloodPressure" placeholder="130/85" value={form.bloodPressure} onChange={onChange} />
+          </label>
 
-        <label>Gender
-          <select name="gender" value={form.gender} onChange={onChange}>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other / Prefer not to say</option>
-          </select>
-        </label>
+          <label>Cholesterol
+            <input name="cholesterol" placeholder="5.2 mmol/L or 200 mg/dL" value={form.cholesterol} onChange={onChange} />
+          </label>
 
-        <label>HbA1c level (%)
-          <input name="hba1cPercent"
-            type="number" min="3" max="20" step="0.1" required
-            value={form.hba1cPercent} onChange={onChange} />
-        </label>
+          <label>Gender
+            <select name="gender" value={form.gender} onChange={onChange}>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Prefer not to say</option>
+            </select>
+          </label>
 
-        <label>Blood Glucose (mg/dL)
-          <input name="glucoseMgDl"
-            type="number" min="40" max="600" step="1" required
-            value={form.glucoseMgDl} onChange={onChange} />
-        </label>
+          <label>HbA1c level (%)
+            <input name="hba1cPercent" type="number" required
+              value={form.hba1cPercent} onChange={onChange} />
+          </label>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Predicting..." : "Predict"}
-        </button>
-      </form>
+          <label>Blood Glucose (mg/dL)
+            <input name="glucoseMgDl" type="number" required
+              value={form.glucoseMgDl} onChange={onChange} />
+          </label>
 
-      {error && <p className="error">⚠️ {error}</p>}
+          <button type="submit" disabled={loading}>
+            {loading ? "Predicting..." : "Predict"}
+          </button>
+        </form>
 
-      {result && (
-        <div className={`result-card risk-${result.result.risk_level}`} role="alert">
-          
-          {/* Gauge */}
-          <div className="risk-gauge">
-            {result.result.risk_percent}%
+        {error && <p className="error">⚠️ {error}</p>}
+
+        {result && (
+          <div className={`result-card risk-${result.risk_level}`} role="alert">
+            <div className="risk-gauge">
+              {result.risk_percent}%
+            </div>
+
+            <h2 style={{ textTransform: "capitalize" }}>
+              Risk: {result.risk_level.replace("_", " ")}
+            </h2>
+
+            <h3>Key Factors</h3>
+            <ul>
+              {result.key_factors.map((k, i) => <li key={i}>{k}</li>)}
+            </ul>
+
+            <h3>Diet recommendations</h3>
+            <ul>
+              {result.diet_recommendations.map((d, i) => <li key={i}>{d}</li>)}
+            </ul>
+
+            <h3>Activity Plan</h3>
+            <ul>
+              {result.activity_plan.map((a, i) => (
+                <li key={i}>
+                  {a.name} — {a.frequency_per_week}× weekly, {a.duration_minutes} min
+                </li>
+              ))}
+            </ul>
+
+            <p className="disclaimer">{result.disclaimer}</p>
           </div>
+        )}
 
-          <h2 style={{ textTransform: "capitalize" }}>
-            Risk: {result.result.risk_level.replace("_", " ")}
-          </h2>
-
-          <h3>Key Factors</h3>
-          <ul>
-            {result.result.key_factors.map((k, i) => <li key={i}>{k}</li>)}
-          </ul>
-
-          <h3>Diet recommendations</h3>
-          <ul>
-            {result.result.diet_recommendations.map((d, i) => <li key={i}>{d}</li>)}
-          </ul>
-
-          <h3>Activity Plan</h3>
-          <ul>
-            {result.result.activity_plan.map((a, i) => (
-              <li key={i}>
-                {a.name} — {a.frequency_per_week}× weekly, {a.duration_minutes} min
-              </li>
-            ))}
-          </ul>
-
-          <p className="disclaimer">{result.result.disclaimer}</p>
-        </div>
-      )}
-
-      <footer className="tiny">
-        * This assessment is informational and not a medical diagnosis.
-      </footer>
+        <footer className="tiny">
+          * This assessment is informational and not a medical diagnosis.
+        </footer>
+      </div>
     </div>
   );
 }

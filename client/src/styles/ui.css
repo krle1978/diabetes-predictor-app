@@ -148,7 +148,11 @@ footer.tiny {
   width: 120px;
   display: block;
   margin: 0 auto 16px auto;
+
+  /* ✅ Safari / iOS support */
+  -webkit-user-select: none;
   user-select: none;
+
   filter: drop-shadow(0 0 10px rgba(0, 200, 255, 0.45));
   animation: fadeInLogo 0.8s ease;
 }
