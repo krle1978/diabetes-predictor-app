@@ -8,6 +8,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ✅ Runtime Mock toggle via Header X-MOCK-MODE
+app.use((req, res, next) => {
+  const flag = req.header("X-MOCK-MODE");
+  if (flag === "true") req.useMock = true;
+  else if (flag === "false") req.useMock = false;
+  next();
+});
+
 // ✅ Determine mode: Mock if env var set OR missing API key
 const USE_MOCK =
   process.env.USE_MOCK_MODE === "true" ||

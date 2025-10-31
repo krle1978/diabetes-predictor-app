@@ -5,13 +5,31 @@ body {
   font-family: "Segoe UI", Roboto, sans-serif;
   background: #f6f7f9;
   color: #222;
+
+  /* Center everything */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* full screen height */
 }
 
 /* Center layout */
 .container {
-  max-width: 480px;
-  margin: auto;
-  padding: 20px;
+  width: 100%;
+  max-width: 420px;
+  padding: 24px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+/* Subtitle */
+.subtitle {
+  text-align: center;
+  opacity: 0.7;
+  font-size: 15px;
+  margin-bottom: 20px;
 }
 
 /* Form elements */
@@ -55,6 +73,25 @@ button:hover {
   background: #006cd8;
 }
 
+/* Admin badges */
+.badge {
+  text-align: center;
+  font-size: 14px;
+  padding: 8px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+}
+
+.badge.mock {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.badge.ai {
+  background: #d4edda;
+  color: #155724;
+}
+
 /* Result card */
 .result-card {
   margin-top: 24px;
@@ -72,22 +109,52 @@ button:hover {
 
 /* Risk gauge container */
 .risk-gauge {
-  width: 150px;
-  height: 150px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   background: conic-gradient(#0a84ff 0deg, #e0e0e0 0deg);
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 12px auto;
-  font-size: 24px;
+  font-size: 26px;
   font-weight: bold;
   color: #222;
   transition: background 1s ease-in-out;
 }
 
-/* Accessibility – stronger outline for keyboard users */
+/* Footer */
+footer.tiny {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 12px;
+  opacity: 0.5;
+}
+
+/* Fade anim */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Stronger keyboard outline */
 :focus-visible {
   outline: 3px dashed #0a84ff !important;
   outline-offset: 3px;
+}
+
+/* Brand Logo */
+.brand-logo {
+  width: 120px;
+  display: block;
+  margin: 0 auto 16px auto;
+  user-select: none;
+  filter: drop-shadow(0 0 10px rgba(0, 200, 255, 0.45));
+  animation: fadeInLogo 0.8s ease;
+}
+
+/* Slight pop animation */
+@keyframes fadeInLogo {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
 }
