@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import "./styles/ui.css";
 
-const API_BASE = "https://diabetes-predictor-app-production.up.railway.app";
+const API_BASE = "";
 
 export default function App() {
   const [form, setForm] = useState({
@@ -46,7 +46,7 @@ export default function App() {
     setResult(null);
 
     try {
-      const res = await fetch(`${API_BASE}/api/predict`, {
+      const res = await fetch(`/api/predict`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
